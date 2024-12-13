@@ -1,5 +1,5 @@
-import { coordToMeters } from "./utils/distanceUtils.ts";
-import { SpeedPoint, TrackPoint } from "./utils/types.ts";
+import { round } from "./numberUtils.ts";
+import { SpeedPoint, TrackPoint } from "./types.ts";
 
 export const calculateSpeed = (points: Array<TrackPoint>) => {
   const speeds: Array<SpeedPoint> = [];
@@ -18,7 +18,12 @@ export const calculateSpeed = (points: Array<TrackPoint>) => {
       point.distanceFromPreviousPoint / timeBetweenInSeconds;
     const speedInKilometersPerHour = speedInMetersPerSecond * 3.6;
 
-    speeds.push({ lon, lat, speed: speedInKilometersPerHour });
+    speeds.push({
+      lon: round(lon, 6),
+      lat: round(lat, 6),
+      speed: round(speedInKilometersPerHour, 3),
+      amount: 1,
+    });
   });
   return speeds;
 };

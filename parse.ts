@@ -41,12 +41,12 @@ export const parseGpx = (gpxString: string, gpxName: string): GpxTrack => {
   const parsedPoints: TrackPoint[] = [];
 
   trackPoints.forEach((trkpt) => {
-    const lat = parseFloat(trkpt.attributes["lat"]);
-    const lon = parseFloat(trkpt.attributes["lon"]);
+    const lat = Number(trkpt.attributes["lat"]);
+    const lon = Number(trkpt.attributes["lon"]);
     const time =
       trkpt.children.find((child) => child.name === "time")?.content ||
       new Date().toISOString();
-    const elevation = parseFloat(
+    const elevation = Number(
       trkpt.children.find((child) => child.name === "ele")?.content || "0"
     );
 
@@ -54,6 +54,7 @@ export const parseGpx = (gpxString: string, gpxName: string): GpxTrack => {
     const distanceInMeters = !prev ? 0 : coordToMeters({ lon, lat }, prev);
 
     parsedPoints.push({
+      id: crypto.randomUUID(),
       lat,
       lon,
       time,
@@ -76,6 +77,7 @@ export const parseGpx = (gpxString: string, gpxName: string): GpxTrack => {
       1000;
 
   return {
+    id: crypto.randomUUID(),
     name: gpxName,
     distance,
     duration,

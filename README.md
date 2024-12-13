@@ -2,32 +2,39 @@
 
 **Docker Install Grafana**
 https://grafana.com/docs/grafana/latest/setup-grafana/installation/docker/
+
 ```
 docker volume create grafana-storage
 ```
+
 ```
 docker run -d -p 666:3000 --name=grafana  --volume grafana-storage:/var/lib/grafana grafana/grafana-enterprise
 ```
+
 **Docker Install Postgres**
 
 ```
 docker volume create postgres-storage
 ```
+
 ```
 docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=postgres -d postgres --volume postgres-storage:/var/lib/postgres
 ```
 
-__Create Db__
+**Create Db**
+
 ```
 createdb -U postgres grafana
 ```
+
 sql:
+
 ```sql
 CREATE TABLE public.routes (
     id uuid NOT NULL unique ,
     name character varying(255),
-    duration: int,
-    distance: int,
+    duration: integer,
+    distance: integer,
     date Date
 );
 
@@ -39,9 +46,9 @@ CREATE TABLE public.route_points (
     timestamp timestamp
 );
 
-alter table public.route_points 
-add constraint fk_rt_points_route 
-foreign key(route_id) references routes(id) 
+alter table public.route_points
+add constraint fk_rt_points_route
+foreign key(route_id) references routes(id)
 on delete cascade;
 
 CREATE TABLE public.speed_map (
@@ -74,7 +81,7 @@ INSERT INTO route_points(id, route_id,longitude, latitude, timestamp)
 VALUES ('73bc9446-1db5-47f4-a293-ac1e7a01a531','ebe8b980-bc63-45bd-8cdd-c02f48feebdc', 4.000,50.000, '2024-12-12T12:04:00');
 
 INSERT INTO speed_map(longitude, latitude, speed, amount_of_data_points)
-VALUES 
+VALUES
     ( 4.402464,51.219448, 120,1),
     ( 4.402465,51.219448, 100,1),
     ( 4.402466,51.219448, 10,1),
@@ -92,9 +99,21 @@ username: postgres
 password: admin
 TLS: disable
 
-query: 
+query:
+
 ```sql
 select pts.id as id, pts.longitude, pts.timestamp, pts.latitude, rt.name, rt.date, rt.id as route_id
-from routes as rt 
+from routes as rt
 join route_points pts on rt.id = pts.route_id
+```
+
+**Docker Install Prometheus**
+
+```
+docker volume create prometheus-storage
+docker volume create prometheus-config
+```
+
+```
+docker run -d -p 9090:9090 --name prometheus -v prometheus-config:/etc/prometheus/ -v prometheus-storage:/prometheus prom/prometheus
 ```
