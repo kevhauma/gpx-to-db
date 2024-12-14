@@ -8,6 +8,7 @@ type GpxDocTrackPoint = {
   time: Date;
   lat: number;
   lon: number;
+  elevation: number;
   distanceFromPreviousPoint: number;
 };
 
@@ -42,6 +43,7 @@ export const parseGpxAsync = (gpxString: string, gpxName: string) => {
                 lat: Number(point.lat),
                 lon: Number(point.lon),
                 time: time.toISOString(),
+                ele: Number(point.elevation),
                 distanceFromPreviousPoint: distanceInMeters,
               });
             });

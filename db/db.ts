@@ -45,9 +45,9 @@ export const saveGpx = async ({
   await trackPointInsertTransaction.begin();
 
   const trackPointsInsertPromises = route.map(
-    async ({ id, lon, lat, time }) =>
+    async ({ id, lon, lat, ele, time }) =>
       await trackPointInsertTransaction.queryArray(
-        `INSERT INTO ROUTE_POINTS (id,route_id,longitude,latitude,timestamp) VALUES ('${id}','${routeId}',${lon},${lat},'${time}');`
+        `INSERT INTO ROUTE_POINTS (id,route_id,longitude,latitude,elevation,timestamp) VALUES ('${id}','${routeId}',${lon},${lat},${ele},'${time}');`
       )
   );
   log(`Inserting ${route.length} points`);

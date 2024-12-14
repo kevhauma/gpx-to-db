@@ -33,8 +33,8 @@ sql:
 CREATE TABLE public.routes (
     id uuid NOT NULL unique ,
     name character varying(255),
-    duration: integer,
-    distance: integer,
+    duration integer,
+    distance integer,
     date Date
 );
 
@@ -43,6 +43,7 @@ CREATE TABLE public.route_points (
     route_id uuid NOT NULL,
     longitude float NOT NULL,
     latitude float NOT NULL,
+    elevation float NOT NULL,
     timestamp timestamp
 );
 

@@ -3,6 +3,7 @@ export type SpeedPointDao = {
   speed: number;
   longitude: number;
   latitude: number;
+  elevation: number;
   amount_of_data_points: number;
 };
 export type SpeedPoint = {
@@ -25,6 +26,7 @@ export type TrackPoint = {
   id: UUID;
   lat: number;
   lon: number;
+  ele: number;
   distanceFromPreviousPoint: number;
   time: string;
 };
