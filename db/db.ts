@@ -82,7 +82,7 @@ const updatePoint = (dbPoint: SpeedPoint, point: SpeedPoint) => {
 
 export const saveSpeedMap = async (
   speedMap: Array<SpeedPoint>,
-  SPEED_MAP_RESOLUTION: number = 5
+  SPEED_MAP_RESOLUTION: number = 15
 ) => {
   const speedMapTransaction = client.createTransaction(`speed_map`);
   log("SpeedMap Transaction Started");
@@ -102,7 +102,7 @@ export const saveSpeedMap = async (
       speed: Number(spdpt.speed),
       amount: spdpt.amount_of_data_points,
     };
-    const coordKey = getCoordString(mappedSpeedPoint);
+    const coordKey = getCoordString(mappedSpeedPoint, 3);
     if (dict[coordKey]) dict[coordKey].push(mappedSpeedPoint);
     else dict[coordKey] = [mappedSpeedPoint];
     return dict;
@@ -114,7 +114,7 @@ export const saveSpeedMap = async (
   const insertPoints: SpeedPointRecord = {};
   log(`Checking ${speedMap.length} Speed Points`);
   speedMap.forEach((speedPoint) => {
-    const coordKey = getCoordString(speedPoint, 4);
+    const coordKey = getCoordString(speedPoint, 3);
     const surroundingSpeedPoints = speedPointsDict[coordKey];
     const nearestSpeedPoint = surroundingSpeedPoints?.find(
       (surr) => coordToMeters(speedPoint, surr) < SPEED_MAP_RESOLUTION

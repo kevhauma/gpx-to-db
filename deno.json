@@ -5,6 +5,6 @@
   "lock": false,
   "nodeModulesDir": "auto",
   "imports": {
-    "xml-parser": "npm:xml-parser@^1.2.1"
+    "gpx-parse": "npm:gpx-parse@^0.10.4"
   }
 }

@@ -1,4 +1,4 @@
-type UUID = `${string}-${string}-${string}-${string}-${string}`;
+export type UUID = `${string}-${string}-${string}-${string}-${string}`;
 export type SpeedPointDao = {
   speed: number;
   longitude: number;
@@ -25,20 +25,6 @@ export type TrackPoint = {
   id: UUID;
   lat: number;
   lon: number;
-  elevation: number;
   distanceFromPreviousPoint: number;
   time: string;
-};
-
-export type XmlChild = {
-  name: string;
-  attributes: Record<string, string>;
-  children: Array<XmlChild>;
-  content: string;
-};
-
-export type XmlDoc = {
-  root: {
-    children: Array<XmlChild>;
-  };
 };
