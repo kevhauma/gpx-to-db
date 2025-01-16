@@ -26,7 +26,7 @@ export const parseGpxAsync = (gpxString: string, gpxName: string) => {
       GPX.parseGpx(gpxString, (error: unknown, data: GpxDoc) => {
         let gpxDate: Date;
         if (error) throw error;
-
+        let idleTime = 0;
         let trackPoints: Array<TrackPoint> = [];
         if (!data) throw "no data found";
         data.tracks.forEach((t) => {
@@ -37,6 +37,14 @@ export const parseGpxAsync = (gpxString: string, gpxName: string) => {
 
               const time = point.time || new Date();
               if (!point.time) time.setSeconds(i);
+
+              const timeBetweenPoints = prev?.time
+                ? time.getTime() - new Date(prev.time).getTime()
+                : 0;
+              
+              //add idle time if time between points exceeds 5 seconds
+              if (timeBetweenPoints > 5000) idleTime += timeBetweenPoints;
+
               if (!gpxDate) gpxDate = time;
               trackPoints.push({
                 id: crypto.randomUUID(),
@@ -55,11 +63,12 @@ export const parseGpxAsync = (gpxString: string, gpxName: string) => {
             distance + distanceFromPreviousPoint,
           0
         );
-        const duration =
-          (new Date(trackPoints[trackPoints.length - 1].time).getTime() -
-            new Date(trackPoints[0].time).getTime()) /
-          1000;
+        const totalTrackTime =
+          new Date(trackPoints[trackPoints.length - 1].time).getTime() -
+          new Date(trackPoints[0].time).getTime();
 
+        const duration = (totalTrackTime - idleTime) / 1000;
+        
         res({
           id: crypto.randomUUID(),
           name: gpxName,
